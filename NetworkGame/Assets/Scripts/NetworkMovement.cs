@@ -41,7 +41,6 @@ public class NetworkMovement : MonoBehaviour
 
     void ReciveCoord(SocketIOEvent e)
     {
-        Debug.Log("ReciveCoord");
         var coord = Coord.FromJson(e.data.ToString());
         networkPosition.NewPosition = coord;
     }
@@ -52,14 +51,23 @@ public class NetworkMovement : MonoBehaviour
         transform.localScale = new Vector3(scale, scale);
     }
 
+    void InitPlayer(SocketIOEvent e)
+    {
+        var startValues = PlayerInfo.FromJson(e.data.ToString());
+        transform.position = new Vector3(startValues.coord.x, startValues.coord.y);
+        transform.localScale = new Vector3(startValues.size, startValues.size, 1);
+    }
+
     void OnEnable()
     {
+        Socket.ON(NetworkEvents.InitPlayer, InitPlayer);
         Socket.ON(NetworkEvents.MyCoord, ReciveCoord);
         Socket.ON(NetworkEvents.MySize, ReciveSize);
     }
 
     void OnDisable()
     {
+        Socket.OFF(NetworkEvents.InitPlayer, InitPlayer);
         Socket.OFF(NetworkEvents.MyCoord, ReciveCoord);
         Socket.OFF(NetworkEvents.MySize, ReciveSize);
     }

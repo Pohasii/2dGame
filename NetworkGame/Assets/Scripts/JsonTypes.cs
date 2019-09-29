@@ -60,18 +60,6 @@ public struct OtherSize
     }
 }
 
-public struct StartValues
-{
-    public int x;
-    public int y;
-    public int size;
-
-    public static StartValues FromJson(string msg)
-    {
-        return JsonUtility.FromJson<StartValues>(msg);
-    }
-}
-
 public struct Size
 {
     public int size;

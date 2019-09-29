@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using SocketIO;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 using Newtonsoft.Json;
 using UnityEngine.UI;
+using MEC;
 
 public class Socket : SocketIOComponent
 {
@@ -40,13 +41,13 @@ public class Socket : SocketIOComponent
         inst.Off(ev, callback);
     }
 
-    IEnumerator LoadYourAsyncScene()
+    IEnumerator<float> LoadGameScene()
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Game");
         asyncLoad.allowSceneActivation = true;
         while (!asyncLoad.isDone)
         {
-            yield return null;
+            yield return Timing.WaitForOneFrame;
         }
 
         Emit(NetworkEvents.SceneLoaded);
@@ -66,8 +67,7 @@ public class Socket : SocketIOComponent
 
     void OnStartGame(SocketIOEvent e)
     {
-        //startValues = JsonUtility.FromJson<StartValues>(e.data.ToString());
-        StartCoroutine(LoadYourAsyncScene());
+        Timing.RunCoroutine(LoadGameScene());
     }
 
     void OnEnable()

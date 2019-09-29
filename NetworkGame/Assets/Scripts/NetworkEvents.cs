@@ -5,7 +5,7 @@ public static class NetworkEvents
     public const string ConnectToGame = "connGame";
     public const string SceneLoaded = "sceneLoaded";
     public const string NewPlayer = "newPlayer";
-
+    public const string InitPlayer = "initPlayer";
 
     public const string OtherPlayers = "otherPlayers";
     public const string OtherSize = "sizeOther";
