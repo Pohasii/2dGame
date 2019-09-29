@@ -49,6 +49,17 @@ public struct OtherCoord
     }
 }
 
+public struct OtherSize
+{
+    public string id;
+    public int size;
+
+    public static OtherSize FromJson(string msg)
+    {
+        return JsonUtility.FromJson<OtherSize>(msg);
+    }
+}
+
 public struct StartValues
 {
     public int x;
@@ -69,6 +80,11 @@ public struct Size
     {
         return JsonUtility.FromJson<Size>(msg);
     }
+}
+
+public struct Id
+{
+    public string id;
 }
 
 public struct PlayerInfo

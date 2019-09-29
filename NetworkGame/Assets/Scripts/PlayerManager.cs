@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SocketIO;
+using Newtonsoft.Json;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -35,15 +36,34 @@ public class PlayerManager : MonoBehaviour
         playerPositions[playerInfo.id].NewPosition = pos;
     }
 
+    void ReciveOtherSize(SocketIOEvent e)
+    {
+        var sizeInfo = OtherSize.FromJson(e.data.ToString());
+        players[sizeInfo.id].localScale = new Vector3(sizeInfo.size, sizeInfo.size);
+    }
+
+    void OnDisconnect(SocketIOEvent e)
+    {
+        var idInfo = JsonUtility.FromJson<Id>(e.data.ToString());
+        Destroy(players[idInfo.id].gameObject);
+        players.Remove(idInfo.id);
+    }
+
     void OnEnable()
     {
+        Socket.ON(NetworkEvents.Disconnect, OnDisconnect);
+        Socket.ON(NetworkEvents.OtherPlayers, OnNewPlayerConnect);
         Socket.ON(NetworkEvents.NewPlayer, OnNewPlayerConnect);
         Socket.ON(NetworkEvents.OtherCoord, ReciveOtherPlayerPosition);
+        Socket.ON(NetworkEvents.OtherSize, ReciveOtherSize);
     }
 
     void OnDisable()
     {
+        Socket.OFF(NetworkEvents.Disconnect, OnDisconnect);
+        Socket.OFF(NetworkEvents.OtherPlayers, OnNewPlayerConnect);
         Socket.OFF(NetworkEvents.NewPlayer, OnNewPlayerConnect);
         Socket.OFF(NetworkEvents.OtherCoord, ReciveOtherPlayerPosition);
+        Socket.OFF(NetworkEvents.OtherSize, ReciveOtherSize);
     }
 }
