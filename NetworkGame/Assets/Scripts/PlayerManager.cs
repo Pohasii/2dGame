@@ -11,6 +11,8 @@ public class PlayerManager : MonoBehaviour
 
     public GameObject playerPrefab;
 
+    public Transform localPlayer;
+
     void OnNewPlayerConnect(SocketIOEvent e)
     {
         var playerInfo = JsonUtility.FromJson<PlayerInfo>(e.data.ToString());
@@ -55,8 +57,17 @@ public class PlayerManager : MonoBehaviour
         players.Remove(idInfo.id);
     }
 
+    void InitLocalPlayer(SocketIOEvent e)
+    {
+        var startValues = PlayerInfo.FromJson(e.data.ToString());
+        localPlayer.position = new Vector3(startValues.coord.x, startValues.coord.y);
+        localPlayer.localScale = new Vector3(startValues.size, startValues.size, 1);
+        localPlayer.gameObject.SetActive(true);
+    }
+
     void OnEnable()
     {
+        Socket.ON(NetworkEvents.InitPlayer, InitLocalPlayer);
         Socket.ON(NetworkEvents.OtherPlayers, OtherPlayer);
         Socket.ON(NetworkEvents.OtherPlayers, OnNewPlayerConnect);
         Socket.ON(NetworkEvents.NewPlayer, OnNewPlayerConnect);
@@ -67,6 +78,7 @@ public class PlayerManager : MonoBehaviour
 
     void OnDisable()
     {
+        Socket.OFF(NetworkEvents.InitPlayer, InitLocalPlayer);
         Socket.OFF(NetworkEvents.OtherPlayers, OnNewPlayerConnect);
         Socket.OFF(NetworkEvents.NewPlayer, OnNewPlayerConnect);
         Socket.OFF(NetworkEvents.OtherCoord, ReciveOtherPlayerPosition);
