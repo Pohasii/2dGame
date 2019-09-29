@@ -16,7 +16,7 @@ public class NetworkMovement : MonoBehaviour
         myTransform = transform;
 
         Timing.RunCoroutine(SendCoordUpdate());
-        networkPosition = new NetworkPosition();
+        networkPosition = new NetworkPosition { NewPosition = myTransform.position };
         GetComponent<Movement>().networkPosition = networkPosition;
     }
 

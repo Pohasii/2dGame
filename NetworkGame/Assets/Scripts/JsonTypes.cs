@@ -37,6 +37,18 @@ public struct Coord
     }
 }
 
+public struct OtherCoord
+{
+    public string id;
+
+    public Vector2Int coord;
+
+    public static PlayerInfo FromJson(string msg)
+    {
+        return JsonUtility.FromJson<PlayerInfo>(msg);
+    }
+}
+
 public struct StartValues
 {
     public int x;

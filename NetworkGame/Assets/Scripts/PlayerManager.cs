@@ -18,7 +18,7 @@ public class PlayerManager : MonoBehaviour
 
         var playerObj = Instantiate(playerPrefab, pos, Quaternion.identity).transform;
 
-        var networkPosition = new NetworkPosition();
+        var networkPosition = new NetworkPosition { NewPosition = playerObj.position };
         playerObj.GetComponent<Movement>().networkPosition = networkPosition;
         playerObj.localScale = new Vector3(playerInfo.size, playerInfo.size);
 
@@ -28,7 +28,7 @@ public class PlayerManager : MonoBehaviour
 
     void ReciveOtherPlayerPosition(SocketIOEvent e)
     {
-        var playerInfo = PlayerInfo.FromJson(e.data.ToString());
+        var playerInfo = OtherCoord.FromJson(e.data.ToString());
 
         var pos = new Vector2(playerInfo.coord.x, playerInfo.coord.y);
 
@@ -38,10 +38,12 @@ public class PlayerManager : MonoBehaviour
     void OnEnable()
     {
         Socket.ON(NetworkEvents.NewPlayer, OnNewPlayerConnect);
+        Socket.ON(NetworkEvents.OtherCoord, ReciveOtherPlayerPosition);
     }
 
     void OnDisable()
     {
         Socket.OFF(NetworkEvents.NewPlayer, OnNewPlayerConnect);
+        Socket.OFF(NetworkEvents.OtherCoord, ReciveOtherPlayerPosition);
     }
 }
