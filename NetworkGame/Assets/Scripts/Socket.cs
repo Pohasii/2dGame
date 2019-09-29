@@ -4,10 +4,13 @@ using SocketIO;
 using System.Collections;
 using System;
 using Newtonsoft.Json;
+using UnityEngine.UI;
 
 public class Socket : SocketIOComponent
 {
     static Socket inst;
+
+    public Text playerName;
 
     public override void Awake()
     {
@@ -51,7 +54,7 @@ public class Socket : SocketIOComponent
 
     public void StartGame()
     {
-        var msg = JsonUtility.ToJson(new NickName { name = "FONTOOMAS" });
+        var msg = JsonUtility.ToJson(new NickName { name = playerName.text });
         Debug.Log(msg);
         Emit(NetworkEvents.ConnectToGame, new JSONObject(msg));
     }
