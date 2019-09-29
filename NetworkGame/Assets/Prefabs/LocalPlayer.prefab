@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -1540496039939367751}
   - component: {fileID: 1979827178056057468}
   m_Layer: 0
-  m_Name: Player
+  m_Name: LocalPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c091a5db5b49194085044db3cf24c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tickRate: 0.1
 --- !u!114 &1979827178056057468
 MonoBehaviour:
   m_ObjectHideFlags: 0

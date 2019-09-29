@@ -13,7 +13,6 @@ public class PlayerManager : MonoBehaviour
 
     void OnNewPlayerConnect(SocketIOEvent e)
     {
-        Debug.Log("OTHERPLAYER");
         var playerInfo = JsonUtility.FromJson<PlayerInfo>(e.data.ToString());
 
         var pos = new Vector2(playerInfo.coord.x, playerInfo.coord.y);
@@ -26,6 +25,11 @@ public class PlayerManager : MonoBehaviour
 
         players.Add(playerInfo.id, playerObj);
         playerPositions.Add(playerInfo.id, networkPosition);
+    }
+
+    void OtherPlayer(SocketIOEvent e)
+    {
+        Debug.Log("OTHERPLAYER");
     }
 
     void ReciveOtherPlayerPosition(SocketIOEvent e)
@@ -53,6 +57,7 @@ public class PlayerManager : MonoBehaviour
 
     void OnEnable()
     {
+        Socket.ON(NetworkEvents.OtherPlayers, OtherPlayer);
         Socket.ON(NetworkEvents.OtherPlayers, OnNewPlayerConnect);
         Socket.ON(NetworkEvents.NewPlayer, OnNewPlayerConnect);
         Socket.ON(NetworkEvents.OtherCoord, ReciveOtherPlayerPosition);
